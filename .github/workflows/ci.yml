@@ -15,7 +15,7 @@ jobs:
           #  deployment_target: "MACOSX_DEPLOYMENT_TARGET=10.11"
           - xcode: "14.2"
             deployment_target: ""
-    runs-on:  macos-12
+    runs-on:  flyci-macos-large-latest-m2
     steps:
       - uses: actions/checkout@v3
 
@@ -28,7 +28,9 @@ jobs:
           DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
 
       - name: Archive
-        run: tar cvJf ~/iina.tar.xz -C /Users/runner/Library/Developer/Xcode/DerivedData/iina-csbkugdtxazzqogjnydbothqrvib/Build/Products/Debug IINA.app 
+        run: |
+          derived_data_dir=$(ls /Users/runner/Library/Developer/Xcode/DerivedData | grep iina)
+          tar cvJf ~/iina.tar.xz -C /Users/runner/Library/Developer/Xcode/DerivedData/$derived_data_dir/Build/Products/Debug IINA.app
 
       - name: Save artifacts
         uses: actions/upload-artifact@v3
